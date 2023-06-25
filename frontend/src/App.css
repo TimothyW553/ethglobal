@@ -140,8 +140,6 @@ input[type="text"] {
 
 .footer {
   display: flex;
-
-
   width: 100vw;
   background-color: rgb(39, 39, 39);
   color: white;
