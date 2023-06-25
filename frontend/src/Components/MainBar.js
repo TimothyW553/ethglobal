@@ -2,7 +2,7 @@ import Epic from '../awesome.png';
 import { useState } from 'react';
 import React from 'react';
 import './MainBar.css';
-import axios from 'axios';
+// import axios from 'axios';
 import './MainBar.css';
 
 const MainBar = () => {
