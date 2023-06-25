@@ -1,9 +1,18 @@
 import Epic from '../awesome.png';
 import { useState } from 'react';
+import React from 'react';
+import './MainBar.css';
+import axios from 'axios';
 import './MainBar.css';
 
-function MainBar() {
-  const jobPostings = [
+const MainBar = () => {
+  const [showForm, setShowForm] = useState(false);
+  const [company, setCompany] = useState('');
+  const [salary, setSalary] = useState('');
+  const [location, setLocation] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [searchTerm, setSearchTerm] = useState('');
+  const [jobPostings, setJobPostings] = useState([
     {
       company: 'St. Vincent\'s Center',
       company_name: 'Surgeon',
@@ -375,15 +384,49 @@ function MainBar() {
           company_name: 'Mortgage Specialist',
           location: 'Quebec City',
           salary: '$55,000'
-          }
-          
-          
-        
-        
-  ];
-  
+          }     
+  ]);
 
-  const [searchTerm, setSearchTerm] = useState('');
+
+  const toggleForm = () => {
+    setShowForm(!showForm);
+  };
+
+  const handleChange = (event) => {
+    const { name, value } = event.target;
+    if (name === 'company') {
+      setCompany(value);
+    } else if (name === 'salary') {
+      setSalary(value);
+    } else if (name === 'location') {
+      setLocation(value);
+    } else if (name === 'jobTitle') {
+      setJobTitle(value);
+    }
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const data = {
+      company: company,
+      salary: salary,
+      location: location,
+      jobTitle: jobTitle,
+    };
+
+    setJobPostings([...jobPostings, data]);
+
+    // Make your API request here using axios
+    // axios.post('http://localhost:8080/api', data)
+
+    // Reset the form fields
+    setCompany('');
+    setSalary('');
+    setLocation('');
+    setJobTitle('');
+    setSearchTerm('');
+    setShowForm(false);
+  };
 
   const filterJobs = (event) => {
     setSearchTerm(event.target.value.toLowerCase());
@@ -412,6 +455,52 @@ function MainBar() {
           onChange={filterJobs}
         />
       </div>
+      <div className="plus" onClick={toggleForm}>
+        <p className="add">+ Add</p>
+      </div>
+      {showForm && (
+        <div className="popup-form">
+          <form onSubmit={handleSubmit}>
+            <input
+              className="input-submit"
+              type="text"
+              name="company"
+              value={company}
+              onChange={handleChange}
+              placeholder="Company"
+              required
+            />
+            <input
+              className="input-submit"
+              type="text"
+              name="salary"
+              value={salary}
+              onChange={handleChange}
+              placeholder="Salary"
+              required
+            />
+            <input
+              type="text"
+              name="location"
+              value={location}
+              onChange={handleChange}
+              placeholder="Location"
+              required
+            />
+            <input
+              type="text"
+              name="jobTitle"
+              value={jobTitle}
+              onChange={handleChange}
+              placeholder="Job Title"
+              required
+            />
+            <button type="submit" className="button">
+              Submit
+            </button>
+          </form>
+        </div>
+      )}
       <div className="job-postings-container">
         {filteredJobPostings.map((jobPosting, index) => (
           <div className="job-posting" key={index}>
@@ -422,8 +511,8 @@ function MainBar() {
           </div>
         ))}
       </div>
-          </div>
+    </div>
   );
-}
+};
 
 export default MainBar;
